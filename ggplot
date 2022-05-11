@@ -1,0 +1,60 @@
+library(ggplot2) 
+
+month <- c(1, 2, 3, 4, 5, 6)
+rain <- c(55, 50, 45, 50, 60, 70)
+df <- data.frame(month, rain) # 그래프 만들 데이터
+df
+
+ggplot(df, aes(x = month, y = rain)) + # 그래프 데이터 지정
+  geom_bar(stat = 'identity',
+           width = 0.7,
+           fill = 'steelblue')
+
+ggplot(df, aes(x = month, y = rain)) +
+  geom_bar(stat = 'identity',
+           width = 0.7,
+           fill = 'steelblue') +
+  ggtitle('월별 강수량') + # 그래프의 제목
+  theme(plot.title = element_text(size = 25,
+                                  face = 'bold',
+                                  colour = 'steelblue')) +
+  labs(x = '월', y = '강수량') +
+  coord_flip() # 그래프를 가로로 표시
+
+#iris Petal.Length 히스토그램 생성
+ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram(binwidth = 0.5)        #히스토그램 작성
+
+# iris sepal.width에 대해 히스토그램 생성
+ggplot(iris, aes(x = Sepal.Width, fill = Species, color = Species)) +
+  geom_histogram(binwidth = 0.5, position = 'dodge') +
+  theme(legend.position = 'top')
+
+# iris petal.length와 petal.width의 산점도 생성
+ggplot(iris, aes(x = Petal.Length, y = Petal.Width)) +
+  geom_point()
+
+# 매개변수 값이 추가된 산점도
+ggplot(iris, aes(x = Petal.Length, y = Petal.Width, color=Species)) +
+  geom_point(size = 3) +
+  ggtitle('꽃잎의 길이와 폭') +
+  theme(plot.title = element_text(size = 25,
+                                  face = 'bold',
+                                  colour = 'steelblue'))
+
+# Petal.Length 의의boxplot
+ggplot(iris, aes(y = Petal.Length)) +
+  geom_boxplot(fill = 'yellow')
+
+# petal.length에 대해 species별 boxplot
+ggplot(iris, aes(y = Petal.Length, fill = Species)) +
+  geom_boxplot()
+
+#선그래프
+year <- 1937:1960
+cnt <- as.vector(airmiles)
+df <- data.frame(year, cnt)
+head(df)
+
+ggplot(df, aes(x = year, y = cnt)) +
+  geom_line(col = 'red')
