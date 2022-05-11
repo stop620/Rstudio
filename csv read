@@ -1,0 +1,56 @@
+# csv File Read
+
+# 국회의원 유권자수 파일 read
+setwd('C:/Rwork')
+ds <- read.csv('국회의원_선거구_유권자수.csv', header = T)
+head(ds)
+summary(ds$선거인.수)
+
+# 선거구별 선거인 수 (전국) boxplot
+boxplot(ds$선거인.수,
+        col = 'yellow',
+        ylim = c(0,250000),
+        xlab = '전국',
+        ylab = '선거인수수')
+
+# 시도 번호로 그룹핑 후 선거인수의 중간값 계산
+cnt <- aggregate(ds[, 5], by = list(ds$시도), median)
+
+# 선거인수의 중간값이 내림차순으로 순위 계산
+odr <- rank(-cnt$x)
+
+# 시도를 그룹핑 후 다중 boxplot 생성
+boxplot(선거인.수~시도, ds,
+           col = heat.colors(16) [odr],
+           ylim = c(0, 250000),
+           ylab = '선거인 수',
+           main = '18대 국회의원 선거구 시도별 선거인수 분포')
+
+odr
+
+# 2017년 서울 기온 파일 read
+ds <- read.csv('Seoul_temp_2017.csv')
+head(ds)
+summary(ds$avg_temp)
+
+# 서울의 1년간 기온 boxplot
+boxplot(ds$avg_temp,
+        col = 'yellow',
+        ylim = c(-20, 40),
+        xlab = '서울 1년 기온',
+        ylab = '기온온')
+
+# 서울의 1년간 월별 기온 계산
+month.avg <- aggregate(ds$avg_temp,
+                       by = list(ds$month), median) [2]
+
+# 월별 평균기온 순위 내림차순 계산
+odr <- rank(-month.avg)
+
+# 월별 기온분포 boxplot
+boxplot(avg_temp~month, ds,
+        col = heat.colors(12) [odr],
+        ylim = c(-20, 40),
+        ylab = '기온',
+        xlab = '월',
+        main = '서울 월별 기온분포 (2017)')
