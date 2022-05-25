@@ -1,0 +1,79 @@
+# Simple Linear Regression/단순 선형 회귀/ y = Wx + b
+model <- lm(dist~speed, cars)
+model
+
+coef(model)[1] # b
+coef(model)[2] # W
+
+# 예측값과 실제값의 차이를 비교함
+speed <- cars[, 1]
+pred <- 3.932 * speed - 17.579
+pred
+compare <- cbind(pred, cars[, 2], abs(pred-cars[, 2]))
+compare
+
+# 회귀식을 산점도에 표현
+plot(dist~speed, cars) # 산점도
+abline(coef(model)) # 선그래프 >> y = Wx + b
+
+# Multiple Linear Regression/다중 선형 회귀/y=w1x1+w2x2...wx + b
+library(car)
+head(Prestige)
+
+# 연봉 예측 모델
+newdata <- Prestige[, c(1:4)]
+plot(newdata, pch = 16,
+     col = 'blue',
+     main = 'Matrix Scatterplot')
+
+mod1 <- lm(income ~ education + prestige + women, newdata)
+summary(mod1)
+
+# 변수 선택
+library(MASS)
+newdata2 <- Prestige[, c(1:5)]
+head(newdata2)
+
+mod2 <- lm(income ~ education + prestige + women + census,
+           data = newdata2)
+step <- stepAIC(mod2, direction = 'both')
+
+newdata2 <- Prestige[, c(1:5)]
+head(newdata2)
+mod3 <- lm(income ~ prestige + women, newdata2)
+summary(mod3)
+
+
+# Logistic Resgression/논리적 회귀/
+head(iris)
+# 종속변수가 숫자형이어야 함. 범주형 변수를 숫자로 변환
+mod4 <- glm(as.integer(Species) ~., data = iris) # ~. >> 앞에뺴고 다
+summary(mod4)
+
+# 품종 예측 1-setosa, 2-versicolor, 3-virginica
+pred <- 1.18650 + 
+  5.1 * (-0.11191) +
+  3.5 * (-0.04008) +
+  1.4 * 0.22865 +
+  0.2 * 0.60925
+pred
+
+unknown <- data.frame(rbind(c(5.1, 3.5, 1.4, 0.2)))
+names(unknown) <- names(iris)[1:4]
+unknown
+mod4
+pred <- predict(mod4, unknown)
+pred
+
+# 여러 개의 데이터 예측
+test <- iris[, 1:4]
+pred <- predict(mod4, test)
+pred
+pred <- round(pred, 0) # round() >> 반올림
+pred
+
+# 정확도 측정
+pred == as.integer(iris[, 5])
+acc <- mean(pred == as.integer(iris[, 5]))
+acc # 0.9733333
+
